@@ -1,5 +1,10 @@
 package com.github.mem64bits.simple.metronome;
 
+import com.github.mem64bits.simple.metronome.listeners.TickEvent;
+import com.github.mem64bits.simple.metronome.internals.TimeSignature;
+import com.github.mem64bits.simple.metronome.internals.MetronomeEngine;
+import com.github.mem64bits.simple.metronome.internals.MetronomeSettings;
+import com.github.mem64bits.simple.metronome.listeners.MetronomeListener;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,7 +123,7 @@ class MetronomeEngineTest {
         assertEquals(1, listener.lastEvent.currentTick());
     }
 
-    static class TestListener implements MetronomeListener {
+    static class TestListener implements MetronomeListener{
         int tickCount = 0;
         TickEvent lastEvent;
 

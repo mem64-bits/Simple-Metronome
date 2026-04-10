@@ -2,7 +2,7 @@ package com.github.mem64bits.simple.metronome.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.github.mem64bits.simple.metronome.MetronomeApp;
+import com.github.mem64bits.simple.metronome.main.MetronomeApp;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
