@@ -8,6 +8,8 @@ import com.github.mem64bits.simple.metronome.listeners.TickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+/*Java Pattern Implementation, allowing lambdas to be passed in like function pointers,*/
+import java.util.function.Consumer;
 
 public class MetronomeEngine extends Timer{
     // Record storing parameters for the way the metronome runs
@@ -59,16 +61,21 @@ public class MetronomeEngine extends Timer{
         // Changes update() method to "paused" state
         reset();
         stateManager.setMode(MetronomeMode.PAUSED, this);
+        broadcast(MetronomeListener::onStop);
     }
 
     @Override
     public void pause(){
         stateManager.setMode(MetronomeMode.PAUSED, this);
+        // Calls onPause() function for all Observing listeners
+        broadcast(MetronomeListener::onPause);
     }
 
     @Override
     public void resume(){
         stateManager.setMode(MetronomeMode.RUNNING, this);
+        // Calls onPause() function for all Observing listeners
+        broadcast(MetronomeListener::onStart);
     }
 
     @Override
@@ -79,6 +86,7 @@ public class MetronomeEngine extends Timer{
         this.currentTick = 0;
         this.beatAccumulator = 0;
         stateManager.setMode(MetronomeMode.PAUSED, this);
+        broadcast(MetronomeListener::onReset);
     }
 
     public long getCurrentTick() { return currentTick; }
@@ -111,6 +119,21 @@ public class MetronomeEngine extends Timer{
         for (MetronomeListener listener : listeners) {
             listener.onMetronomeTick(event);
         }
+    }
+
+    /*Improves listener update functionality inside & outside the
+    * MetronomeEngine, before individual listener update functions where
+    * needed.*/
+
+    private void broadcast(Consumer<MetronomeListener> action){
+        for(MetronomeListener listener : listeners){
+            action.accept(listener);
+        }
+    }
+
+    // External method to update specific listener functions
+    public void dispatch(Consumer<MetronomeListener> action){
+        broadcast(action);
     }
 
     public CommandManager getCmdMgr(){

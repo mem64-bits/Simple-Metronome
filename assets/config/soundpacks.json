@@ -1,0 +1,12 @@
+[
+  {
+    "id": "default",
+    "high_beat_path": "sounds/default/high.wav",
+    "low_beat_path": "sounds/default/low.wav"
+  },
+  {
+    "id": "reece",
+    "high_beat_path": "sounds/reece/high.wav",
+    "low_beat_path": "sounds/reece/low.wav"
+  }
+]

@@ -4,10 +4,10 @@ import com.github.mem64bits.simple.metronome.internals.MetronomeEngine;
 import com.github.mem64bits.simple.metronome.internals.MetronomeSettings;
 
 public class DecreaseBpm implements Command{
-    int amount;
-    int lastBpm;
+    float amount;
+    float lastBpm;
 
-    public DecreaseBpm(int decrease){
+    public DecreaseBpm(float decrease){
         this.amount = decrease;
 
     }
@@ -15,7 +15,7 @@ public class DecreaseBpm implements Command{
     @Override
     public void execute(MetronomeEngine engine){
         this.lastBpm = engine.getSettings().bpm();
-        int newBpm = lastBpm - amount;
+        float newBpm = lastBpm - amount;
         engine.setSettings(new MetronomeSettings(newBpm, engine.getSettings().signature(), engine.getSettings().subdivision()));
     }
 

@@ -1,0 +1,9 @@
+{
+  "keyboard": {
+    "SPACE": "TOGGLE_PAUSE",
+    "UP": "BPM_UP",
+    "DOWN": "BPM_DOWN",
+    "ESCAPE": "QUIT_APP"
+  }
+
+}

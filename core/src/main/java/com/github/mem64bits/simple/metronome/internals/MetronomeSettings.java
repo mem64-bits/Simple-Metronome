@@ -3,7 +3,7 @@ package com.github.mem64bits.simple.metronome.internals;
 
 // Holds important parameters about how and when the metronome should be played
 public record MetronomeSettings(
-    int bpm,
+    float bpm,
     TimeSignature signature,
     int subdivision
 ){

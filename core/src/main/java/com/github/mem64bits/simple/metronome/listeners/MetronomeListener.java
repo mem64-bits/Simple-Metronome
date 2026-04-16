@@ -17,4 +17,5 @@ public interface MetronomeListener{
     default void onStart(){}
     default void onStop(){}
     default void onPause(){}
+    default void onReset(){};
 }

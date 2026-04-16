@@ -5,7 +5,7 @@ package com.github.mem64bits.simple.metronome.listeners;
 public record TickEvent(
     long tickMeasure,
     long currentTick,
-    int bpm,
+    float bpm,
     boolean isAccent, // The isAccent boolean tells the listener if beat updated is the first in measure
     boolean isSub
 ){

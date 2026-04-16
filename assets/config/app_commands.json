@@ -1,0 +1,22 @@
+[
+  {
+    "id": "TOGGLE_PAUSE",
+    "type": "TOGGLE_PAUSE_COMMAND"
+  },
+  {
+    "id": "BPM_UP",
+    "type": "BPM_UP_COMMAND",
+    "amount": 5
+  },
+  {
+    "id": "BPM_DOWN",
+    "type": "BPM_DOWN_COMMAND",
+    "amount": 5
+  },
+
+  {
+    "id": "QUIT_APP",
+    "type": "QUIT_APP_COMMAND"
+  }
+
+]

@@ -20,7 +20,7 @@ class MetronomeEngineTest {
     /**
      * Helper to create an engine with a specific BPM
      */
-    private MetronomeEngine createEngine(int bpm) {
+    private MetronomeEngine createEngine(float bpm) {
         MetronomeSettings settings = new MetronomeSettings(
             bpm,
             new TimeSignature(4, 4),
