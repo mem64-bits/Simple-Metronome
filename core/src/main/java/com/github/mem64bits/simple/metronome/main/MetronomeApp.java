@@ -109,7 +109,6 @@ public class MetronomeApp extends ApplicationAdapter {
 
         // Binds input to a specific command pattern referenced to by a given hashkey
         inputBinder = new InputBinder();
-
         try{
             inputBinder.loadFromJson(Gdx.files.internal("config/keybinds.json").file().toPath());
         } catch(IOException e){

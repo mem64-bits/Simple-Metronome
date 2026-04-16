@@ -26,7 +26,6 @@ public record CommandConfig(
         this.next = next != null ? next : Optional.empty();
     }
 
-    // THE FACTORY METHOD: Creates the actual Command object based on 'type'
     public Command toCommand() {
         return switch (type.toUpperCase()) { // Ensure type is always uppercase for consistency
             case "TOGGLE_PAUSE_COMMAND" -> new PauseCommand();
@@ -39,8 +38,6 @@ public record CommandConfig(
             case "BPM_DOWN_COMMAND" -> new DecreaseBpm(amount().orElseThrow(
                 () -> new IllegalArgumentException("Amount Required for BpmDecrease Command")
             ));
-
-
 
             default -> throw new IllegalArgumentException("Unknown command type: " + type + " for ID: " + id);
         };

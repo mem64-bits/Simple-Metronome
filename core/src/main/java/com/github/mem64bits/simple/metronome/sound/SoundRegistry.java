@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.fasterxml.jackson.databind.ObjectMapper; // Jackson import
 import com.fasterxml.jackson.databind.type.CollectionType; // For parsing arrays
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.github.mem64bits.simple.metronome.config.JSONErrorParser;
 import com.github.mem64bits.simple.metronome.config.SoundPackConfig; // DTO import
 
 import java.io.IOException;
@@ -29,28 +30,37 @@ public class SoundRegistry {
         if (!configFileHandle.exists()) {
             throw new IOException("Sound config file not found: " + configPath);
         }
-        String jsonContent = configFileHandle.readString();
 
-        // Jackson: Parse JSON Array into List of DTOs
-        CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, SoundPackConfig.class);
-        List<SoundPackConfig> configs = objectMapper.readValue(jsonContent, listType); // FIX: Use objectMapper.readValue
+        try{
+            String jsonContent = configFileHandle.readString();
+            CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, SoundPackConfig.class);
+            List<SoundPackConfig> configs = objectMapper.readValue(jsonContent, listType); // FIX: Use objectMapper.readValue
 
-        // Use DTOs to create and register MetronomeSound objects
-        for (SoundPackConfig config : configs) {
-            try {
-                int baseBpm = config.base_bpm().orElse(0);
-                MetronomeSound pack = MetronomeSound.load(
-                    config.id(),
-                    config.high_beat_path(),
-                    config.low_beat_path(),
-                    Optional.of(baseBpm)
-                );
-                // Register using the ID, which is automatically lowercased
-                registerSound(pack.getSoundID(), pack);
-                System.out.println("[SoundRegistry] Loaded: " + pack.getSoundID());
-            } catch (IllegalArgumentException e) {
-                System.err.println("[SoundRegistry] Error loading pack " + config.id() + ": " + e.getMessage());
+            for(SoundPackConfig config : configs){
+                try{
+                    int baseBpm = config.base_bpm().orElse(0);
+                    MetronomeSound pack = MetronomeSound.load(
+                        config.id(),
+                        config.high_beat_path(),
+                        config.low_beat_path(),
+                        Optional.of(baseBpm)
+                    );
+                    // Register using the ID, which is automatically lowercased
+                    registerSound(pack.getSoundID(), pack);
+                    System.out.println("[SoundRegistry] Loaded: " + pack.getSoundID());
+
+                } catch(IllegalArgumentException e){
+                    System.err.println("[SoundRegistry] Error loading pack " + config.id() + ": " + e.getMessage());
+                }
             }
+
+        } catch(Exception e){
+            JSONErrorParser.report(
+                configPath.getFileName().toString(),
+                configFileHandle.file().toPath(),
+                e
+            );
+            throw e;
         }
     }
 

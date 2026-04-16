@@ -3,6 +3,7 @@ package com.github.mem64bits.simple.metronome.commands;
 import com.github.mem64bits.simple.metronome.internals.MetronomeEngine;
 import com.github.mem64bits.simple.metronome.internals.MetronomeSettings;
 
+
 public class IncreaseBpm implements Command{
    float amount;
    float lastBpm;

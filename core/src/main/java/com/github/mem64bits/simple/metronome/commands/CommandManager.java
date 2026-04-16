@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.mem64bits.simple.metronome.config.CommandConfig;
+import com.github.mem64bits.simple.metronome.config.JSONErrorParser;
 import com.github.mem64bits.simple.metronome.internals.MetronomeEngine;
 
 import java.io.IOException;
@@ -64,25 +65,31 @@ public class CommandManager {
     }
 
     public void loadFromJson(Path configPath) throws IOException {
-        FileHandle configFileHandle = Gdx.files.internal(configPath.toString());
-        if (!configFileHandle.exists()) {
+        FileHandle fileHandle = Gdx.files.internal(configPath.toString());
+        if (!fileHandle.exists()) {
             throw new IOException("Command config file not found: " + configPath);
         }
-        String jsonContent = configFileHandle.readString();
 
-        CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, CommandConfig.class);
-        List<CommandConfig> configs = objectMapper.readValue(jsonContent, listType);
+        try{
+            String jsonContent = fileHandle.readString();
+            CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, CommandConfig.class);
+            List<CommandConfig> configs = objectMapper.readValue(jsonContent, listType);
+            registry.clear(); // Clear old commands if reloading
 
-        registry.clear(); // Clear old commands if reloading
-        for (CommandConfig config : configs) {
-            try {
-                // The DTO itself acts as the factory
-                Command cmd = config.toCommand();
-                registerCommand(config.id(), cmd);
-                System.out.println("[CommandManager] Registered command: " + config.id());
-            } catch (Exception e) {
-                System.err.println("[CommandManager] Error registering command " + config.id() + ": " + e.getMessage());
+            for (CommandConfig config : configs) {
+                try {
+                    // The DTO itself acts as the factory
+                    Command cmd = config.toCommand();
+                    registerCommand(config.id(), cmd);
+                    System.out.println("[CommandManager] Registered command: " + config.id());
+                } catch (Exception e) {
+                    System.err.println("[CommandManager] Error registering command " + config.id() + ": " + e.getMessage());
+                }
             }
+
+        } catch(Exception e){
+            JSONErrorParser.report(configPath.getFileName().toString(), fileHandle.file().toPath(), e);
+            throw e;
         }
     }
 }
